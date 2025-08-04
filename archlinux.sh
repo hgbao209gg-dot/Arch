@@ -1,10 +1,7 @@
 #!/bin/bash
-
 ROOTFS_DIR=/home/container
 PROOT_VERSION="5.3.0"
-
 ARCH=$(uname -m)
-
 if [ "$ARCH" = "x86_64" ]; then
     ROOTFS_URL="https://geo.mirror.pkgbuild.com/iso/2025.08.01/archlinux-bootstrap-2025.08.01-x86_64.tar.zst"
     ROOTFS_FILE="arch-bootstrap-x86_64.tar.zst"
@@ -17,15 +14,12 @@ else
     echo "Unsupported architecture: $ARCH"
     exit 1
 fi
-
 if [ -e "$ROOTFS_DIR/.installed" ]; then
     echo "Arch đã setup sẵn r, khỏi cần nữa"
 else
     echo "[*] Đang tải rootfs cho $ARCH..."
     curl -Lo /tmp/$ROOTFS_FILE "$ROOTFS_URL"
-
     mkdir -p "$ROOTFS_DIR"
-
     if [ "$ARCH" = "x86_64" ]; then
         echo "[*] Giải nén rootfs x86_64..."
         tar -I zstd -xf /tmp/$ROOTFS_FILE -C /tmp
@@ -34,32 +28,26 @@ else
         echo "[*] Giải nén rootfs aarch64..."
         tar -xzf /tmp/$ROOTFS_FILE -C "$ROOTFS_DIR"
     fi
-
     echo "[*] Tải PRoot static..."
     curl -Lo "$ROOTFS_DIR/usr/local/bin/proot" \
         "https://github.com/proot-me/proot/releases/download/v${PROOT_VERSION}/proot-v${PROOT_VERSION}-${ARCH}-static"
     chmod +x "$ROOTFS_DIR/usr/local/bin/proot"
-
     echo "[*] Thêm DNS và mirror"
     echo "nameserver 1.1.1.1" > "$ROOTFS_DIR/etc/resolv.conf"
     echo "nameserver 8.8.8.8" >> "$ROOTFS_DIR/etc/resolv.conf"
-
     if [ "$ARCH" = "x86_64" ]; then
         echo "Server = https://mirror.osbeck.com/archlinux/\$repo/os/\$arch" > "$ROOTFS_DIR/etc/pacman.d/mirrorlist"
     elif [ "$ARCH" = "aarch64" ]; then
         echo "Server = http://sg.mirror.archlinuxarm.org/\$arch/\$repo" > "$ROOTFS_DIR/etc/pacman.d/mirrorlist"
     fi
-
     touch "$ROOTFS_DIR/.installed"
     rm -rf /tmp/$ROOTFS_FILE /tmp/$ROOTFS_UNPACK_PATH
 fi
-
 clear && echo "
 ────────────────────────────────────────
  ✅ Arch PRoot đã sẵn sàng, chạy thôi nào!
 ────────────────────────────────────────
 "
-
 "$ROOTFS_DIR/usr/local/bin/proot" \
     --rootfs="$ROOTFS_DIR" \
     --link2symlink \
