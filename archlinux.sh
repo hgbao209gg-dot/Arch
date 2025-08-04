@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ROOTFS_DIR=/home/container
 PROOT_VERSION="5.3.0"
