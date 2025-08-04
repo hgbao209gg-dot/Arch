@@ -12,7 +12,7 @@ if [ "$ARCH" = "x86_64" ]; then
 elif [ "$ARCH" = "aarch64" ]; then
     ROOTFS_URL="http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
     ROOTFS_FILE="archarm-aarch64.tar.gz"
-    ROOTFS_UNPACK_PATH="" 
+    ROOTFS_UNPACK_PATH=""
 else
     echo "Unsupported architecture: $ARCH"
     exit 1
@@ -54,14 +54,12 @@ else
     rm -rf /tmp/$ROOTFS_FILE /tmp/$ROOTFS_UNPACK_PATH
 fi
 
-# Đoạn chào hỏi nhẹ
 clear && echo "
 ────────────────────────────────────────
  ✅ Arch PRoot đã sẵn sàng, chạy thôi nào!
 ────────────────────────────────────────
 "
 
-# Chạy proot vào rootfs
 "$ROOTFS_DIR/usr/local/bin/proot" \
     --rootfs="$ROOTFS_DIR" \
     --link2symlink \
