@@ -1,4 +1,5 @@
 #!/bin/bash
+exec bash "$0" "$@"
 ROOTFS_DIR=/home/container
 PROOT_VERSION="5.3.0"
 ARCH=$(uname -m)
@@ -59,3 +60,4 @@ clear && echo "
     --bind=/sys \
     --bind=/tmp \
     /bin/bash
+
