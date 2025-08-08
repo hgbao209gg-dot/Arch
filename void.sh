@@ -48,10 +48,6 @@ else
     printf "Cài đặt hoàn tất! Khởi động môi trường...\n"
 fi
 
----
-### Phần Khởi Động
----
-
 printf "[*] Khởi động môi trường Void Linux...\n"
 exec "${PROOT_BIN}" \
     --rootfs="$ROOTFS_DIR" \
